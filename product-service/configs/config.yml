@@ -1,0 +1,10 @@
+app:
+  port: 1325
+  name: "authentication-service"
+
+mongo:
+  username: "root"
+  password: "12345678"
+  host: "localhost"
+  port: 27017
+  database: "store"
