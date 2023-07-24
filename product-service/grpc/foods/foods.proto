@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+// golang package
+package foods;
+
+// golang package sorce
+option go_package = "app/grpc/foods";
+
+import  "grpc/common/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// The greeting service definition.
+service Foods {
+  rpc GetAll (GetAllRequest) returns (GetAllResponse) {};  
+}
+
+message GetAllRequest {
+  common.Query query = 1;
+}
+
+message Food {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  double price = 4;
+  string name = 5;
+}
+
+message GetAllResponse {
+  common.PageInfo page_info = 1;
+  repeated Food entities = 2;
+}
