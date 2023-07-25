@@ -21,6 +21,7 @@ func NewAPI() {
 	e.Use(middlewares.LogResponseMiddleware())
 	e.HTTPErrorHandler = middlewares.CustomHTTPErrorHandler
 	e.HideBanner = true
+	e.Use(middleware.CORS())
 	// jwtMiddleware := jwtx.NewJWT(app.key)
 
 	hdl := handler.NewHandler(handler.Dependencies{

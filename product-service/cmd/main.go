@@ -20,6 +20,6 @@ func main() {
 	}
 
 	protocol.Init()
-	go protocol.NewGRPC()
-	protocol.NewAPI()
+	go protocol.NewAPI()
+	protocol.NewGRPC()
 }
