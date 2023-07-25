@@ -8,14 +8,22 @@ const FoodsJson = () => {
 
   useEffect(() => {
     (async () => {
-      const data = await callAPI();
-      setFoods(data);
+      try {
+        const data = await callAPI();
+        setFoods(data);
+      } catch (e) {
+        console.log(e);
+      }
     })();
   }, []);
 
   const callAPI = async () => {
-    const resp = await axios.get(`${configs.HOST_API}/api/v1/foods`);
-    return resp.data?.entities ?? [];
+    try {
+      const resp = await axios.get(`${configs.HOST_API}/api/v1/foods`);
+      return resp.data?.entities ?? [];
+    } catch (e) {
+      throw e
+    }
   };
 
   return (

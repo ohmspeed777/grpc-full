@@ -23,7 +23,7 @@ const FoodsGRPC = () => {
     const req = new GetAllRequest();
     req.setQuery(q);
     const resp = await instants.foodGRPC.getAll(req, null);
-    console.log(resp);
+    // console.log(resp.getEntitiesList().map(el => el.));
   };
 
   return (

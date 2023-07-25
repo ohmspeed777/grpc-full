@@ -1,2 +1,2 @@
 start-envoy:
-	docker build -t gateway ./envoy && docker run -d --rm -p 9090:9090 gateway    
+	docker build -t gateway ./envoy && docker run -p 8080:8080 gateway    
