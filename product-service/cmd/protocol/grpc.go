@@ -23,7 +23,7 @@ func NewGRPC() {
 	})
 
 	// regis service
-	foods.RegisterFoodsServer(server, foodGroup)
+	foods.RegisterFoodsServiceServer(server, foodGroup)
 
 	logx.GetLog().Infof("grpc server starting on port: %d", app.Config.APP.GRPCPort)
 	server.Serve(lis)

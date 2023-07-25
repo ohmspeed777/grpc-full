@@ -1,6 +1,12 @@
 import React from "react";
 
-const Card = (props) => {
+interface IProps {
+  name: string
+  price: number
+  id: string
+}
+
+const Card = (props: IProps) => {
   const { name, price, id } = props
   return (
     <div className="card  bg-base-100 shadow-xl mx-1 mb-2" key={id}>

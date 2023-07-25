@@ -1,9 +1,9 @@
 import Card from "../../components/card";
 import configs from "../../configs/configs";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const FoodsGRPC = () => {
+const FoodsJson = () => {
   const [foods, setFoods] = useState([]);
 
   useEffect(() => {
@@ -20,10 +20,10 @@ const FoodsGRPC = () => {
 
   return (
     <div className="container max-w-2xl mx-auto pt-12">
-      <h1 className="text-center">Food Json Format via HTTP</h1>
+      <h1 className="text-center">Food Json Format HTTP</h1>
       <div className="grid grid-cols-2 mt-6">{foods.map((el) => Card(el))}</div>
     </div>
   );
 };
 
-export default FoodsGRPC;
+export default FoodsJson;

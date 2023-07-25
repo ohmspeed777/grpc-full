@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+//package
+package common;
+
+message Query {
+  int64 page = 1;
+  int64 limit = 2;
+}
+
+message PageInfo {
+  int64 page = 1;
+  int64 size = 2;
+  int64 num_of_pages = 3;
+  int64 all_of_entities = 4;
+}

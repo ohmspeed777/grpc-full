@@ -12,8 +12,11 @@
   "dependencies": {
     "autoprefixer": "^10.4.14",
     "axios": "^1.4.0",
+    "grpc-web": "^1.4.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
+    "protoc-gen-grpc-web": "^1.4.2",
+    "protoc-gen-js": "^3.21.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.14.0",

@@ -15,10 +15,10 @@ import (
 func NewAPI() {
 	e := echo.New()
 	// e.HTTPErrorHandler = middleware.ErrorHandler(app.conf.App.Prefix)
-	e.Use(middlewares.LogRequestMiddleware(app.key))
+	// e.Use(middlewares.LogRequestMiddleware(app.key))
 	e.Use(middleware.Recover())
 	e.Use(middleware.Gzip())
-	e.Use(middlewares.LogResponseMiddleware())
+	// e.Use(middlewares.LogResponseMiddleware())
 	e.HTTPErrorHandler = middlewares.CustomHTTPErrorHandler
 	e.HideBanner = true
 	e.Use(middleware.CORS())

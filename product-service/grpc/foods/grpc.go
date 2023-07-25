@@ -16,7 +16,7 @@ type Dependencies struct {
 type GRPC struct {
 	ProductService ports.ProductService
 	transformer    *transformer
-	UnimplementedFoodsServer
+	UnimplementedFoodsServiceServer
 }
 
 func NewGRPC(d Dependencies) *GRPC {

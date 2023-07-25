@@ -18,86 +18,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// FoodsClient is the client API for Foods service.
+// FoodsServiceClient is the client API for FoodsService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type FoodsClient interface {
+type FoodsServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 }
 
-type foodsClient struct {
+type foodsServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewFoodsClient(cc grpc.ClientConnInterface) FoodsClient {
-	return &foodsClient{cc}
+func NewFoodsServiceClient(cc grpc.ClientConnInterface) FoodsServiceClient {
+	return &foodsServiceClient{cc}
 }
 
-func (c *foodsClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
+func (c *foodsServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error) {
 	out := new(GetAllResponse)
-	err := c.cc.Invoke(ctx, "/foods.Foods/GetAll", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/foods.FoodsService/GetAll", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// FoodsServer is the server API for Foods service.
-// All implementations must embed UnimplementedFoodsServer
+// FoodsServiceServer is the server API for FoodsService service.
+// All implementations must embed UnimplementedFoodsServiceServer
 // for forward compatibility
-type FoodsServer interface {
+type FoodsServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
-	mustEmbedUnimplementedFoodsServer()
+	mustEmbedUnimplementedFoodsServiceServer()
 }
 
-// UnimplementedFoodsServer must be embedded to have forward compatible implementations.
-type UnimplementedFoodsServer struct {
+// UnimplementedFoodsServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedFoodsServiceServer struct {
 }
 
-func (UnimplementedFoodsServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
+func (UnimplementedFoodsServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
-func (UnimplementedFoodsServer) mustEmbedUnimplementedFoodsServer() {}
+func (UnimplementedFoodsServiceServer) mustEmbedUnimplementedFoodsServiceServer() {}
 
-// UnsafeFoodsServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to FoodsServer will
+// UnsafeFoodsServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to FoodsServiceServer will
 // result in compilation errors.
-type UnsafeFoodsServer interface {
-	mustEmbedUnimplementedFoodsServer()
+type UnsafeFoodsServiceServer interface {
+	mustEmbedUnimplementedFoodsServiceServer()
 }
 
-func RegisterFoodsServer(s grpc.ServiceRegistrar, srv FoodsServer) {
-	s.RegisterService(&Foods_ServiceDesc, srv)
+func RegisterFoodsServiceServer(s grpc.ServiceRegistrar, srv FoodsServiceServer) {
+	s.RegisterService(&FoodsService_ServiceDesc, srv)
 }
 
-func _Foods_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _FoodsService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetAllRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FoodsServer).GetAll(ctx, in)
+		return srv.(FoodsServiceServer).GetAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/foods.Foods/GetAll",
+		FullMethod: "/foods.FoodsService/GetAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FoodsServer).GetAll(ctx, req.(*GetAllRequest))
+		return srv.(FoodsServiceServer).GetAll(ctx, req.(*GetAllRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Foods_ServiceDesc is the grpc.ServiceDesc for Foods service.
+// FoodsService_ServiceDesc is the grpc.ServiceDesc for FoodsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Foods_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "foods.Foods",
-	HandlerType: (*FoodsServer)(nil),
+var FoodsService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "foods.FoodsService",
+	HandlerType: (*FoodsServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetAll",
-			Handler:    _Foods_GetAll_Handler,
+			Handler:    _FoodsService_GetAll_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
