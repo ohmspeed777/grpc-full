@@ -34,6 +34,7 @@ func NewAPI() {
 	foods := baseAPI.Group("/foods")
 	{
 		foods.GET("", hdl.Product.GetAll)
+		foods.POST("", hdl.Product.Create)
 	}
 
 	logx.GetLog().Infof("server starting on port: %d", app.Config.APP.APIPort)

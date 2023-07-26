@@ -43,3 +43,24 @@ func (h *Handler) GetAll(ctx echo.Context) error {
 	resp := h.transformer.toPaginateResponse(entity.Entities, common.PageInfo(entity.PageInfo))
 	return ctx.JSON(http.StatusOK, resp)
 }
+
+
+
+func (h *Handler) Create(ctx echo.Context) error {
+	var (
+		req = Product{}
+	)
+
+	errs := ctx.Bind(&req)
+	if errs != nil {
+		return errors.WithStack(errs)
+	}
+
+	entity, err := h.ProductService.Create(ctx.Request().Context(), h.transformer.toRequest(req))
+	if err != nil {
+		return err
+	}
+
+	resp := h.transformer.toResponse(entity)
+	return ctx.JSON(http.StatusOK, resp)
+}

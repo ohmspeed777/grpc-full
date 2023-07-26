@@ -7,6 +7,7 @@
 package foods
 
 import (
+	common "app/grpc/common"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -23,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FoodsServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
+	GetAllStream(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (FoodsService_GetAllStreamClient, error)
 }
 
 type foodsServiceClient struct {
@@ -42,11 +44,44 @@ func (c *foodsServiceClient) GetAll(ctx context.Context, in *GetAllRequest, opts
 	return out, nil
 }
 
+func (c *foodsServiceClient) GetAllStream(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (FoodsService_GetAllStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &FoodsService_ServiceDesc.Streams[0], "/foods.FoodsService/GetAllStream", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &foodsServiceGetAllStreamClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type FoodsService_GetAllStreamClient interface {
+	Recv() (*Food, error)
+	grpc.ClientStream
+}
+
+type foodsServiceGetAllStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *foodsServiceGetAllStreamClient) Recv() (*Food, error) {
+	m := new(Food)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // FoodsServiceServer is the server API for FoodsService service.
 // All implementations must embed UnimplementedFoodsServiceServer
 // for forward compatibility
 type FoodsServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
+	GetAllStream(*common.Empty, FoodsService_GetAllStreamServer) error
 	mustEmbedUnimplementedFoodsServiceServer()
 }
 
@@ -56,6 +91,9 @@ type UnimplementedFoodsServiceServer struct {
 
 func (UnimplementedFoodsServiceServer) GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedFoodsServiceServer) GetAllStream(*common.Empty, FoodsService_GetAllStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetAllStream not implemented")
 }
 func (UnimplementedFoodsServiceServer) mustEmbedUnimplementedFoodsServiceServer() {}
 
@@ -88,6 +126,27 @@ func _FoodsService_GetAll_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FoodsService_GetAllStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(common.Empty)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(FoodsServiceServer).GetAllStream(m, &foodsServiceGetAllStreamServer{stream})
+}
+
+type FoodsService_GetAllStreamServer interface {
+	Send(*Food) error
+	grpc.ServerStream
+}
+
+type foodsServiceGetAllStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *foodsServiceGetAllStreamServer) Send(m *Food) error {
+	return x.ServerStream.SendMsg(m)
+}
+
 // FoodsService_ServiceDesc is the grpc.ServiceDesc for FoodsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +159,12 @@ var FoodsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _FoodsService_GetAll_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetAllStream",
+			Handler:       _FoodsService_GetAllStream_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "grpc/foods/foods.proto",
 }

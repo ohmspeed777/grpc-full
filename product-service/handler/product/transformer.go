@@ -34,3 +34,13 @@ func (t *transformer) toQueryRequest(req common.Query) domain.Query {
 		Limit: req.Limit,
 	}
 }
+
+func (t *transformer) toRequest(req Product) domain.Product {
+	return domain.Product{
+		ID:        req.ID,
+		Name:      req.Name,
+		Price:     req.Price,
+		UpdatedAt: req.UpdatedAt,
+		CreatedAt: req.CreatedAt,
+	}
+}

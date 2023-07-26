@@ -9,7 +9,7 @@ import (
 )
 
 type Model struct {
-	ID        primitive.ObjectID `bson:"_id"`
+	ID        primitive.ObjectID `bson:"_id,omitempty"`
 	UpdatedAt time.Time          `bson:"updated_at,omitempty"`
 	CreatedAt time.Time          `bson:"created_at,omitempty"`
 }

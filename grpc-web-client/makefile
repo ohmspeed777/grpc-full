@@ -1,5 +1,5 @@
 run:
-	npm run start -FAST_REFRESH=true
+	npm run start
 
 
 # protoc --plugin=/usr/local/bin/protoc-gen-grpc-web

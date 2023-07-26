@@ -17,6 +17,7 @@
 
 import * as grpcWeb from 'grpc-web';
 
+import * as src_protos_common_pb from '../../src/protos/common_pb';
 import * as src_protos_foods_pb from '../../src/protos/foods_pb';
 
 
@@ -80,6 +81,28 @@ export class FoodsServiceClient {
     request,
     metadata || {},
     this.methodDescriptorGetAll);
+  }
+
+  methodDescriptorGetAllStream = new grpcWeb.MethodDescriptor(
+    '/foods.FoodsService/GetAllStream',
+    grpcWeb.MethodType.SERVER_STREAMING,
+    src_protos_common_pb.Empty,
+    src_protos_foods_pb.Food,
+    (request: src_protos_common_pb.Empty) => {
+      return request.serializeBinary();
+    },
+    src_protos_foods_pb.Food.deserializeBinary
+  );
+
+  getAllStream(
+    request: src_protos_common_pb.Empty,
+    metadata?: grpcWeb.Metadata): grpcWeb.ClientReadableStream<src_protos_foods_pb.Food> {
+    return this.client_.serverStreaming(
+      this.hostname_ +
+        '/foods.FoodsService/GetAllStream',
+      request,
+      metadata || {},
+      this.methodDescriptorGetAllStream);
   }
 
 }

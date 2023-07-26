@@ -19,7 +19,4 @@ message PageInfo {
 }
 
 
-// type ResponseInfo struct {
-// 	PageInfo PageInfo `json:"page_info"`
-// 	Entities any      `json:"entities"`
-// }
+message Empty {}

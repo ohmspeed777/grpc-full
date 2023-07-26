@@ -5,6 +5,7 @@ import (
 	"app/internal/core/ports"
 	"app/repository/mongodb/common"
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/pkg/errors"
@@ -55,4 +56,19 @@ func (r *Repo) FindAll(ctx context.Context, q domain.Query) (empty []domain.Prod
 	}
 
 	return r.transformer.toManyDomain(model), counter, nil
+}
+
+func (r *Repo) Create(ctx context.Context, e domain.Product) (empty domain.Product, err error) {
+	model := r.transformer.toModel(e)
+	_, err = r.collection.InsertOne(ctx, &model)
+
+	if err != nil {
+		fmt.Println()
+		fmt.Println()
+		fmt.Println(err)
+		fmt.Println()
+		return empty, errors.WithStack(err)
+	}
+
+	return r.transformer.toDomain(model), nil
 }

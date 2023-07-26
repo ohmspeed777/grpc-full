@@ -2,8 +2,11 @@ package foods
 
 import (
 	"app/grpc/common"
+	"app/internal/core/domain"
 	"app/internal/core/ports"
 	context "context"
+	"fmt"
+	"time"
 
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -38,6 +41,24 @@ func (g *GRPC) GetAll(ctx context.Context, req *GetAllRequest) (*GetAllResponse,
 		AllOfEntities: entity.PageInfo.AllOfEntities,
 		NumOfPages:    entity.PageInfo.NumOfPages,
 	})
-	
+
 	return &resp, nil
+}
+
+func (g *GRPC) GetAllStream(req *common.Empty, srv FoodsService_GetAllStreamServer) error {
+	entity, err := g.ProductService.FindAll(srv.Context(), domain.Query{})
+	if err != nil {
+		return status.Error(codes.Internal, err.Error())
+	}
+
+	for _, v := range entity.Entities {
+		time.Sleep(1 * time.Second)
+		fmt.Println(v.Name)
+		err := srv.Send(g.transformer.toResponse(v))
+		if err != nil {
+			return status.Error(codes.Internal, err.Error())
+		}
+	}
+
+	return nil
 }

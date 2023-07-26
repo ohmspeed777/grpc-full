@@ -11,7 +11,8 @@ import "google/protobuf/timestamp.proto";
 
 // The greeting service definition.
 service FoodsService {
-  rpc GetAll (GetAllRequest) returns (GetAllResponse) {};  
+  rpc GetAll (GetAllRequest) returns (GetAllResponse) {};
+  rpc GetAllStream (common.Empty) returns (stream Food) {};    
 }
 
 message GetAllRequest {

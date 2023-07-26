@@ -48,5 +48,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "react-refresh": "^0.14.0",
+    "react-refresh-typescript": "^2.0.9",
+    "webpack-cli": "^5.1.4"
   }
 }
