@@ -30,9 +30,10 @@ func NewAPI() {
 
 	baseAPI := e.Group("/api/v1")
 
-	foods := baseAPI.Group("/foods")
+	users := baseAPI.Group("/users")
 	{
-		foods.GET("", hdl.Product.GetAll)
+		users.POST("/sign-up", hdl.User.SignUp)
+		users.POST("/sign-in", hdl.User.SignIn)
 	}
 
 	logx.GetLog().Infof("server starting on port: %d", app.Config.APP.APIPort)

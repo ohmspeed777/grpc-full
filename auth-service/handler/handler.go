@@ -2,12 +2,12 @@ package handler
 
 import (
 	"app/configs"
-	"app/handler/product"
+	"app/handler/user"
 	"app/internal/core/services"
 )
 
 type Handler struct {
-	Product *product.Handler
+	User *user.Handler
 }
 
 type Dependencies struct {
@@ -17,8 +17,8 @@ type Dependencies struct {
 
 func NewHandler(d Dependencies) *Handler {
 	return &Handler{
-		Product: product.NewHandler(product.Dependencies{
-			ProductService: d.Service.ProductService,
-		}),
+		User: user.NewHandler(user.Dependencies{
+			UserService: d.Service.UserService,
+		}), 
 	}
 }

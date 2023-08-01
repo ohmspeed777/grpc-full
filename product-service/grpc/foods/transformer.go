@@ -1,23 +1,23 @@
 package foods
 
 import (
-	"app/grpc/common"
+	"app/protobufs/common"
 	"app/internal/core/domain"
-
+	pb "app/protobufs/foods"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type transformer struct{}
 
-func (t *transformer) toQueryRequest(req *GetAllRequest) domain.Query {
+func (t *transformer) toQueryRequest(req *pb.GetAllRequest) domain.Query {
 	return domain.Query{
 		Limit: uint(req.Query.Limit),
 		Page:  uint(req.Query.Page),
 	}
 }
 
-func (t *transformer) toResponse(p domain.Product) *Food {
-	return &Food{
+func (t *transformer) toResponse(p domain.Product) *pb.Food {
+	return &pb.Food{
 		Id:        p.ID,
 		CreatedAt: timestamppb.New(p.CreatedAt),
 		UpdatedAt: timestamppb.New(p.UpdatedAt),
@@ -26,9 +26,9 @@ func (t *transformer) toResponse(p domain.Product) *Food {
 	}
 }
 
-func (t *transformer) toPaginateResponse(entities []domain.Product, info *common.PageInfo) GetAllResponse {
-	res := GetAllResponse{}
-	data := make([]*Food, len(entities))
+func (t *transformer) toPaginateResponse(entities []domain.Product, info *common.PageInfo) pb.GetAllResponse {
+	res := pb.GetAllResponse{}
+	data := make([]*pb.Food, len(entities))
 	for i, v := range entities {
 		data[i] = t.toResponse(v)
 	}

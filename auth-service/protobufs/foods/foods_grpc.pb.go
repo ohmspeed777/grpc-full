@@ -2,12 +2,12 @@
 // versions:
 // - protoc-gen-go-grpc v1.2.0
 // - protoc             v3.21.12
-// source: grpc/foods/foods.proto
+// source: protobufs/foods/foods.proto
 
 package foods
 
 import (
-	common "app/grpc/common"
+	common "app/protobufs/common"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -25,6 +25,7 @@ const _ = grpc.SupportPackageIsVersion7
 type FoodsServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	GetAllStream(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (FoodsService_GetAllStreamClient, error)
+	SendStream(ctx context.Context, opts ...grpc.CallOption) (FoodsService_SendStreamClient, error)
 }
 
 type foodsServiceClient struct {
@@ -76,12 +77,47 @@ func (x *foodsServiceGetAllStreamClient) Recv() (*Food, error) {
 	return m, nil
 }
 
+func (c *foodsServiceClient) SendStream(ctx context.Context, opts ...grpc.CallOption) (FoodsService_SendStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &FoodsService_ServiceDesc.Streams[1], "/foods.FoodsService/SendStream", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &foodsServiceSendStreamClient{stream}
+	return x, nil
+}
+
+type FoodsService_SendStreamClient interface {
+	Send(*Food) error
+	CloseAndRecv() (*GetAllResponse, error)
+	grpc.ClientStream
+}
+
+type foodsServiceSendStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *foodsServiceSendStreamClient) Send(m *Food) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *foodsServiceSendStreamClient) CloseAndRecv() (*GetAllResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(GetAllResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // FoodsServiceServer is the server API for FoodsService service.
 // All implementations must embed UnimplementedFoodsServiceServer
 // for forward compatibility
 type FoodsServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	GetAllStream(*common.Empty, FoodsService_GetAllStreamServer) error
+	SendStream(FoodsService_SendStreamServer) error
 	mustEmbedUnimplementedFoodsServiceServer()
 }
 
@@ -94,6 +130,9 @@ func (UnimplementedFoodsServiceServer) GetAll(context.Context, *GetAllRequest) (
 }
 func (UnimplementedFoodsServiceServer) GetAllStream(*common.Empty, FoodsService_GetAllStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetAllStream not implemented")
+}
+func (UnimplementedFoodsServiceServer) SendStream(FoodsService_SendStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method SendStream not implemented")
 }
 func (UnimplementedFoodsServiceServer) mustEmbedUnimplementedFoodsServiceServer() {}
 
@@ -147,6 +186,32 @@ func (x *foodsServiceGetAllStreamServer) Send(m *Food) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _FoodsService_SendStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(FoodsServiceServer).SendStream(&foodsServiceSendStreamServer{stream})
+}
+
+type FoodsService_SendStreamServer interface {
+	SendAndClose(*GetAllResponse) error
+	Recv() (*Food, error)
+	grpc.ServerStream
+}
+
+type foodsServiceSendStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *foodsServiceSendStreamServer) SendAndClose(m *GetAllResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *foodsServiceSendStreamServer) Recv() (*Food, error) {
+	m := new(Food)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // FoodsService_ServiceDesc is the grpc.ServiceDesc for FoodsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -165,6 +230,11 @@ var FoodsService_ServiceDesc = grpc.ServiceDesc{
 			Handler:       _FoodsService_GetAllStream_Handler,
 			ServerStreams: true,
 		},
+		{
+			StreamName:    "SendStream",
+			Handler:       _FoodsService_SendStream_Handler,
+			ClientStreams: true,
+		},
 	},
-	Metadata: "grpc/foods/foods.proto",
+	Metadata: "protobufs/foods/foods.proto",
 }

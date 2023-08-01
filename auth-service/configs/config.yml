@@ -1,14 +1,14 @@
 app:
-  api: 1325
-  name: "store-service"
-  grpc: 50001
+  api: 1326
+  name: "auth-service"
+  grpc: 50002
 
 mongo:
   username: "root"
   password: "12345678"
   host: "localhost"
   port: 27017
-  database: "store"
+  database: "user"
 
 jwt:
   pub: |

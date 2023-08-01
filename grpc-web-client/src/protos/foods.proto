@@ -10,6 +10,7 @@ import "google/protobuf/timestamp.proto";
 service FoodsService {
   rpc GetAll (GetAllRequest) returns (GetAllResponse) {};  
   rpc GetAllStream (common.Empty) returns (stream Food) {};  
+  rpc SendStream (stream Food) returns (GetAllResponse) {};
 }
 
 message GetAllRequest {

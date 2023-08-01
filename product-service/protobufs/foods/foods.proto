@@ -4,14 +4,16 @@ syntax = "proto3";
 package foods;
 
 // golang package sorce
-option go_package = "app/grpc/foods";
+option go_package = "app/protobufs/foods";
 
-import  "grpc/common/common.proto";
+import  "protobufs/common/common.proto";
 import "google/protobuf/timestamp.proto";
 
 // The greeting service definition.
-service Foods {
-  rpc GetAll (GetAllRequest) returns (GetAllResponse) {};  
+service FoodsService {
+  rpc GetAll (GetAllRequest) returns (GetAllResponse) {};
+  rpc GetAllStream (common.Empty) returns (stream Food) {}; 
+  rpc SendStream (stream Food) returns (GetAllResponse) {};       
 }
 
 message GetAllRequest {

@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"app/grpc/foods"
+	_foods "app/protobufs/foods"
 	"fmt"
 	"net"
 
@@ -23,7 +24,7 @@ func NewGRPC() {
 	})
 
 	// regis service
-	foods.RegisterFoodsServiceServer(server, foodGroup)
+	_foods.RegisterFoodsServiceServer(server, foodGroup)
 
 	logx.GetLog().Infof("grpc server starting on port: %d", app.Config.APP.GRPCPort)
 	server.Serve(lis)

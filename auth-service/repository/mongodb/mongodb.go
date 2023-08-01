@@ -3,7 +3,7 @@ package mongodb
 import (
 	"app/configs"
 	"app/internal/core/ports"
-	"app/repository/mongodb/products"
+	"app/repository/mongodb/user"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -14,12 +14,12 @@ type Dependencies struct {
 }
 
 type Repository struct {
-	ProductRepository ports.ProductRepository
+	UserRepository ports.UserRepository
 }
 
 func NewRepository(d Dependencies) *Repository {
 	return &Repository{
-		ProductRepository: products.NewRepo(products.Dependencies{
+		UserRepository: user.NewRepo(user.Dependencies{
 			DB: d.MongoClient.Database(d.Config.MongoDB.Database),
 		}),
 	}

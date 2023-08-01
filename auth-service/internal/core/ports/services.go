@@ -8,3 +8,8 @@ import (
 type ProductService interface {
 	FindAll(ctx context.Context, req domain.Query) (res domain.ResponseInfo[[]domain.Product], err error)
 }
+
+type UserService interface {
+	SignIn(ctx context.Context, req domain.SignInReq) (*domain.SignInRes, error)
+	SignUp(ctx context.Context, req domain.SignUpReq) error
+}

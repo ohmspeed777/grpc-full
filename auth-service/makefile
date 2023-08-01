@@ -18,6 +18,6 @@ protogen:
 	--go_opt=paths=source_relative \
 	--go-grpc_out=. \
 	--go-grpc_opt=paths=source_relative \
-	grpc/common/common.proto \
-	grpc/foods/foods.proto
+	protobufs/common/common.proto \
+	protobufs/foods/foods.proto
 

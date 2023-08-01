@@ -3,7 +3,7 @@ package services
 import (
 	"app/configs"
 	"app/internal/core/ports"
-	"app/internal/core/services/product"
+	"app/internal/core/services/user"
 	"app/repository/mongodb"
 )
 
@@ -13,13 +13,14 @@ type Dependencies struct {
 }
 
 type Service struct {
-	ProductService ports.ProductService
+	UserService ports.UserService
 }
 
 func NewService(d Dependencies) *Service {
 	return &Service{
-		ProductService: product.NewService(product.Dependencies{
-			ProductRepository: d.Repository.ProductRepository,
+		UserService: user.NewService(user.Dependencies{
+			UserRepository: d.Repository.UserRepository,
+			Key:            d.Conf.JWT.PRIV,
 		}),
 	}
 }

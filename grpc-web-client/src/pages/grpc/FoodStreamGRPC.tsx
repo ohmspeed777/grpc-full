@@ -7,7 +7,7 @@ import { IFood } from "../../types/food";
 const FoodsStreamGRPC = () => {
   const [foods, setFoods] = useState<IFood[]>([]);
 
-  const callGRPC = () => {
+  const getStream = () => {
     const req = new Empty();
     const resp: IFood[] = [];
 
@@ -47,7 +47,7 @@ const FoodsStreamGRPC = () => {
       <h1 className="text-center">Food Protobuf Format GRPC</h1>
       <button
         onClick={() => {
-          callGRPC();
+          getStream();
         }}
       >
         GET DATA

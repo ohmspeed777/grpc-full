@@ -4,7 +4,7 @@ syntax = "proto3";
 package common;
 
 //golang package sorce
-option go_package = "app/grpc/common";
+option go_package = "app/protobufs/common";
 
 message Query {
   int64 page = 1;
