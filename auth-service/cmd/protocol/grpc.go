@@ -1,21 +1,30 @@
 package protocol
 
-// func NewGRPC() {
-// 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", app.Config.APP.GRPCPort))
-// 	if err != nil {
-// 		logx.GetLog().Fatalf("failed to listen: %v", err)
-// 	}
+import (
+	"app/grpc/user"
+	"fmt"
+	"net"
+	_user "app/protobufs/user"
+	"github.com/ohmspeed777/go-pkg/logx"
+	"google.golang.org/grpc"
+)
 
-// 	server := grpc.NewServer()
+func NewGRPC() {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", app.Config.APP.GRPCPort))
+	if err != nil {
+		logx.GetLog().Fatalf("failed to listen: %v", err)
+	}
 
-// 	// create groups
-// 	foodGroup := foods.NewGRPC(foods.Dependencies{
-// 		ProductService: app.Service.ProductService,
-// 	})
+	server := grpc.NewServer()
 
-// 	// regis service
-// 	foods.RegisterFoodsServer(server, foodGroup)
+	// create groups
+	userGroup := user.NewGRPC(user.Dependencies{
+		UserService: app.Service.UserService,
+	})
 
-// 	logx.GetLog().Infof("grpc server starting on port: %d", app.Config.APP.GRPCPort)
-// 	server.Serve(lis)
-// }
+	// regis service
+	_user.RegisterUserServiceServer(server, userGroup)
+
+	logx.GetLog().Infof("grpc server starting on port: %d", app.Config.APP.GRPCPort)
+	server.Serve(lis)
+}

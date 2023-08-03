@@ -19,5 +19,6 @@ protogen:
 	--go-grpc_out=. \
 	--go-grpc_opt=paths=source_relative \
 	protobufs/common/common.proto \
-	protobufs/foods/foods.proto
+	protobufs/foods/foods.proto \
+	protobufs/user/user.proto
 

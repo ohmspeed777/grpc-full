@@ -9,7 +9,7 @@ option go_package = "app/protobufs/foods";
 import  "protobufs/common/common.proto";
 import "google/protobuf/timestamp.proto";
 
-// The greeting service definition.
+// The FoodsService service definition.
 service FoodsService {
   rpc GetAll (GetAllRequest) returns (GetAllResponse) {};
   rpc GetAllStream (common.Empty) returns (stream Food) {}; 

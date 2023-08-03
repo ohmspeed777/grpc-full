@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+// golang package
+package user;
+
+// golang package sorce
+option go_package = "app/protobufs/user";
+
+// The UserService service definition.
+service UserService {
+  rpc SignIn (SignInReq) returns (SignInResp) {};   
+}
+
+message SignInReq {
+  string email = 1;
+  string password = 2;
+}
+
+message SignInResp {
+  string token = 1;
+  string refresh_token = 2;
+}
+
