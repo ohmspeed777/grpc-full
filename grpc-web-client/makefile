@@ -14,4 +14,5 @@ protogen:
 	--js_out=import_style=commonjs:. \
 	--grpc-web_out=import_style=typescript,mode=grpcweb:. \
 	src/protos/common.proto \
-	src/protos/foods.proto
+	src/protos/foods.proto \
+	src/protos/users.proto

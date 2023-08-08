@@ -5,7 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Route from "./pages/Route";
 import FoodJson from "./pages/json/FoodJson";
 import FoodGRPC from "./pages/grpc/FoodGRPC";
-import FoodStreamGRPC from "./pages/grpc/FoodStreamGRPC"
+import SignInGRPC from "./pages/grpc/SignInGRPC";
+import FoodStreamGRPC from "./pages/grpc/FoodStreamGRPC";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "json/food",
         element: <FoodJson />,
+      },
+      {
+        path: "grpc/sign-in",
+        element: <SignInGRPC />,
       },
     ],
   },

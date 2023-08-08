@@ -18,13 +18,21 @@ static_resources:
               route_config:
                 name: local_route
                 virtual_hosts:
-                  - name: local_service
+                  - name: grpc_web_proxy
                     domains: ["*"]
                     routes:
-                      - match: { prefix: "/" }
+                      - name: foods_service
+                        match: { prefix: "/foods.FoodsService"}
                         route:
-                          cluster: echo_service
-                          timeout: 0s
+                          cluster: foods_service
+                          timeout: 60s
+                          max_stream_duration:
+                            grpc_timeout_header_max: 0s
+                      - name: users_service
+                        match: { prefix: "/user.UserService"}
+                        route:
+                          cluster: users_service
+                          timeout: 60s
                           max_stream_duration:
                             grpc_timeout_header_max: 0s
                     cors:
@@ -45,7 +53,7 @@ static_resources:
                   typed_config:
                     "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
-    - name: echo_service
+    - name: foods_service
       connect_timeout: 0.25s
       type: logical_dns
       http2_protocol_options: {}
@@ -59,3 +67,17 @@ static_resources:
                   socket_address:
                     address: host.docker.internal
                     port_value: 50001
+    - name: users_service
+      connect_timeout: 0.25s
+      type: logical_dns
+      http2_protocol_options: {}
+      lb_policy: round_robin
+      load_assignment:
+        cluster_name: cluster_0
+        endpoints:
+          - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: host.docker.internal
+                    port_value: 50002

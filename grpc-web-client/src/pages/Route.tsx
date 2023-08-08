@@ -16,6 +16,12 @@ const Route = () => {
             <li>
               <Link to={"/grpc/food"}>Food GRPC</Link>
             </li>
+            <li>
+              <Link to={"/grpc/stream/food"}>Food Stream GRPC</Link>
+            </li>
+            <li>
+              <Link to={"/grpc/sign-in"}>Sign In GRPC</Link>
+            </li>
             {/* <li>
               <details>
                 <summary>Parent</summary>

@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+// package
+package user;
+
+// The UserService service definition.
+service UserService {
+  rpc SignIn (SignInReq) returns (SignInResp) {};   
+}
+
+message SignInReq {
+  string email = 1;
+  string password = 2;
+}
+
+message SignInResp {
+  string token = 1;
+  string refresh_token = 2;
+}
+
