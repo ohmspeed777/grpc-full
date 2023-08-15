@@ -60,11 +60,10 @@ func (h *Handler) Create(ctx echo.Context) error {
 		req.UserID = user.ID
 	}
 
-	entity, err := h.OrderService.Create(ctx.Request().Context(), h.transformer.toRequest(req))
+	_, err := h.OrderService.Create(ctx.Request().Context(), h.transformer.toRequest(req))
 	if err != nil {
 		return err
 	}
 
-	resp := h.transformer.toResponse(entity)
-	return ctx.JSON(http.StatusOK, resp)
+	return ctx.JSON(http.StatusOK, nil)
 }

@@ -50,11 +50,12 @@ func (t *transformer) toDomain(p OrderLookedUp) domain.Order {
 			}
 		}
 	}
+
 	return domain.Order{
 		ID:        p.ID.Hex(),
 		CreatedAt: p.CreatedAt,
 		UpdatedAt: p.UpdatedAt,
-		Items:     nil,
+		Items:     items,
 		Total:     p.Total,
 		UserID:    p.UserID.Hex(),
 	}

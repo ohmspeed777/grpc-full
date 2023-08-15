@@ -3,11 +3,11 @@ package order
 import (
 	"app/internal/core/domain"
 	"app/internal/core/ports"
-	"app/repository/mongodb/common"
 	"context"
 	"sync"
 
 	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -38,7 +38,19 @@ func (r *Repo) FindAll(ctx context.Context, q domain.Query) (empty []domain.Orde
 	)
 
 	filter := r.transformer.buildQueryFilter(q)
-	cursor, err := r.collection.Find(ctx, filter, common.GetPaginationOption(q))
+	// match := primitive.M{
+	// 	"$match": filter,
+	// }
+	lookup := primitive.M{
+		"$lookup": primitive.M{
+			"from":         "products",
+			"localField":   "items.product_id",
+			"foreignField": "_id",
+			"as":           "products_joined",
+		},
+	}
+	pipes := []primitive.M{ lookup}
+	cursor, err := r.collection.Aggregate(ctx, pipes)
 
 	if err != nil {
 		return empty, counter, errors.WithStack(err)

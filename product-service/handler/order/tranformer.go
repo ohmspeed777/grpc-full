@@ -27,6 +27,9 @@ func (t *transformer) toResponse(p domain.Order) Order {
 		ID:        p.ID,
 		CreatedAt: p.CreatedAt,
 		UpdatedAt: p.UpdatedAt,
+		Items:     items,
+		UserID:    p.UserID,
+		Total:     p.Total,
 	}
 
 	return resp
