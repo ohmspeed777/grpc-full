@@ -3,8 +3,9 @@ package domain
 import "math"
 
 type Query struct {
-	Limit uint
-	Page  uint
+	Limit  uint
+	Page   uint
+	UserID string
 }
 
 func (q *Query) GetLimit() int64 {

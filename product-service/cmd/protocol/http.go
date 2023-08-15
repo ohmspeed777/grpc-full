@@ -7,6 +7,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/ohmspeed777/go-pkg/jwtx"
 	"github.com/ohmspeed777/go-pkg/logx"
 	"github.com/ohmspeed777/go-pkg/middlewares"
 	"github.com/tylerb/graceful"
@@ -22,7 +23,7 @@ func NewAPI() {
 	e.HTTPErrorHandler = middlewares.CustomHTTPErrorHandler
 	e.HideBanner = true
 	e.Use(middleware.CORS())
-	// jwtMiddleware := jwtx.NewJWT(app.key)
+	jwtMiddleware := jwtx.NewJWT(app.key)
 
 	hdl := handler.NewHandler(handler.Dependencies{
 		Config:  *app.Config,
@@ -35,6 +36,12 @@ func NewAPI() {
 	{
 		foods.GET("", hdl.Product.GetAll)
 		foods.POST("", hdl.Product.Create)
+	}
+
+	order := baseAPI.Group("/orders", jwtMiddleware.RequiredAuth)
+	{
+		order.GET("", hdl.Order.GetAll)
+		order.POST("", hdl.Order.Create)
 	}
 
 	logx.GetLog().Infof("server starting on port: %d", app.Config.APP.APIPort)
