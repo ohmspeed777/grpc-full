@@ -82,5 +82,48 @@ export class UserServiceClient {
     this.methodDescriptorSignIn);
   }
 
+  methodDescriptorGetMyOrder = new grpcWeb.MethodDescriptor(
+    '/user.UserService/GetMyOrder',
+    grpcWeb.MethodType.UNARY,
+    src_protos_users_pb.GetMyOrderReq,
+    src_protos_users_pb.GetMyOrderResp,
+    (request: src_protos_users_pb.GetMyOrderReq) => {
+      return request.serializeBinary();
+    },
+    src_protos_users_pb.GetMyOrderResp.deserializeBinary
+  );
+
+  getMyOrder(
+    request: src_protos_users_pb.GetMyOrderReq,
+    metadata: grpcWeb.Metadata | null): Promise<src_protos_users_pb.GetMyOrderResp>;
+
+  getMyOrder(
+    request: src_protos_users_pb.GetMyOrderReq,
+    metadata: grpcWeb.Metadata | null,
+    callback: (err: grpcWeb.RpcError,
+               response: src_protos_users_pb.GetMyOrderResp) => void): grpcWeb.ClientReadableStream<src_protos_users_pb.GetMyOrderResp>;
+
+  getMyOrder(
+    request: src_protos_users_pb.GetMyOrderReq,
+    metadata: grpcWeb.Metadata | null,
+    callback?: (err: grpcWeb.RpcError,
+               response: src_protos_users_pb.GetMyOrderResp) => void) {
+    if (callback !== undefined) {
+      return this.client_.rpcCall(
+        this.hostname_ +
+          '/user.UserService/GetMyOrder',
+        request,
+        metadata || {},
+        this.methodDescriptorGetMyOrder,
+        callback);
+    }
+    return this.client_.unaryCall(
+    this.hostname_ +
+      '/user.UserService/GetMyOrder',
+    request,
+    metadata || {},
+    this.methodDescriptorGetMyOrder);
+  }
+
 }
 

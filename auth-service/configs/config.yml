@@ -1,7 +1,7 @@
 app:
   api: 1326
   name: "auth-service"
-  grpc: 50002
+  grpc: 50001
   
 grpc:
   order: "localhost:50002"

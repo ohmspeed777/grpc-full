@@ -6,9 +6,14 @@ package user;
 // golang package sorce
 option go_package = "app/protobufs/user";
 
+import "google/protobuf/timestamp.proto";
+import  "protobufs/common/common.proto";
+import  "protobufs/foods/foods.proto";
+
 // The UserService service definition.
 service UserService {
   rpc SignIn (SignInReq) returns (SignInResp) {};   
+  rpc GetMyOrder (GetMyOrderReq) returns (GetMyOrderResp) {};   
 }
 
 message SignInReq {
@@ -16,8 +21,40 @@ message SignInReq {
   string password = 2;
 }
 
+message GetMyOrderReq {}
+
 message SignInResp {
   string token = 1;
   string refresh_token = 2;
 }
 
+
+message GetMyOrderResp {
+  common.PageInfo page_info = 1;
+  repeated Order entities = 2;
+}
+
+message Order {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  repeated OrderItem items = 4;
+  double total = 5;
+  User user = 6;
+}
+
+message User {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  string email = 4;
+  string first_name = 5;
+  string last_name = 6;
+}
+
+
+message OrderItem {
+  int64 quantity = 1;
+  string product_id = 2;
+  foods.Food product = 3;
+}

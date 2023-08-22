@@ -22,6 +22,9 @@ const Route = () => {
             <li>
               <Link to={"/grpc/sign-in"}>Sign In GRPC</Link>
             </li>
+            <li>
+              <Link to={"/grpc/auth/orders"}>Order GRPC</Link>
+            </li>
             {/* <li>
               <details>
                 <summary>Parent</summary>

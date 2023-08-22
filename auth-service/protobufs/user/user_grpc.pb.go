@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServiceClient interface {
 	SignIn(ctx context.Context, in *SignInReq, opts ...grpc.CallOption) (*SignInResp, error)
+	GetMyOrder(ctx context.Context, in *GetMyOrderReq, opts ...grpc.CallOption) (*GetMyOrderResp, error)
 }
 
 type userServiceClient struct {
@@ -42,11 +43,21 @@ func (c *userServiceClient) SignIn(ctx context.Context, in *SignInReq, opts ...g
 	return out, nil
 }
 
+func (c *userServiceClient) GetMyOrder(ctx context.Context, in *GetMyOrderReq, opts ...grpc.CallOption) (*GetMyOrderResp, error) {
+	out := new(GetMyOrderResp)
+	err := c.cc.Invoke(ctx, "/user.UserService/GetMyOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility
 type UserServiceServer interface {
 	SignIn(context.Context, *SignInReq) (*SignInResp, error)
+	GetMyOrder(context.Context, *GetMyOrderReq) (*GetMyOrderResp, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedUserServiceServer struct {
 
 func (UnimplementedUserServiceServer) SignIn(context.Context, *SignInReq) (*SignInResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignIn not implemented")
+}
+func (UnimplementedUserServiceServer) GetMyOrder(context.Context, *GetMyOrderReq) (*GetMyOrderResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetMyOrder not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 
@@ -88,6 +102,24 @@ func _UserService_SignIn_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_GetMyOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetMyOrderReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).GetMyOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.UserService/GetMyOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).GetMyOrder(ctx, req.(*GetMyOrderReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SignIn",
 			Handler:    _UserService_SignIn_Handler,
+		},
+		{
+			MethodName: "GetMyOrder",
+			Handler:    _UserService_GetMyOrder_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
