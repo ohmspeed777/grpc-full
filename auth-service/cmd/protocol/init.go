@@ -35,6 +35,7 @@ func Init() {
 	app.Service = services.NewService(services.Dependencies{
 		Conf:       app.Config,
 		Repository: repo,
+		CC: newOrderGrpcClient(),
 	})
 
 	pkbytes := []byte(app.Config.JWT.PRIV)

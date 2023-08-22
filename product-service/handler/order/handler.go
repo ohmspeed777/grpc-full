@@ -36,7 +36,13 @@ func (h *Handler) GetAll(ctx echo.Context) error {
 		return errors.WithStack(errs)
 	}
 
-	entity, err := h.OrderService.FindAll(ctx.Request().Context(), h.transformer.toQueryRequest(req))
+	e := h.transformer.toQueryRequest(req)
+	user, ok := ctx.Get("user").(*jwtx.User)
+	if ok {
+		e.UserID = user.ID
+	}
+
+	entity, err := h.OrderService.FindAll(ctx.Request().Context(), e)
 	if err != nil {
 		return err
 	}

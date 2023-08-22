@@ -2,7 +2,9 @@ package protocol
 
 import (
 	"app/grpc/foods"
+	"app/grpc/orders"
 	_foods "app/protobufs/foods"
+	_orders "app/protobufs/orders"
 	"fmt"
 	"net"
 
@@ -23,8 +25,14 @@ func NewGRPC() {
 		ProductService: app.Service.ProductService,
 	})
 
+	orderGroup := orders.NewGRPC(orders.Dependencies{
+		Key:          &app.key.PublicKey,
+		OrderService: app.Service.OrderService,
+	})
+
 	// regis service
 	_foods.RegisterFoodsServiceServer(server, foodGroup)
+	_orders.RegisterOrderServiceServer(server, orderGroup)
 
 	logx.GetLog().Infof("grpc server starting on port: %d", app.Config.APP.GRPCPort)
 	server.Serve(lis)

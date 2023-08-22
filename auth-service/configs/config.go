@@ -22,12 +22,17 @@ type Config struct {
 	MongoDB MongoDB
 	APP     APP
 	JWT     JWT
+	GRPC    GRPC
 }
 
 type APP struct {
 	Name     string
 	APIPort  int
 	GRPCPort int
+}
+
+type GRPC struct {
+	Order string
 }
 
 type JWT struct {
@@ -52,6 +57,9 @@ func NewConfig() *Config {
 		JWT: JWT{
 			PRIV: viper.GetString("jwt.key"),
 			PUB:  viper.GetString("jwt.pub"),
+		},
+		GRPC: GRPC{
+			Order: viper.GetString("grpc.order"),
 		},
 	}
 }

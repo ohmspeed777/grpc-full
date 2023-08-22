@@ -1,0 +1,38 @@
+syntax = "proto3";
+package order;
+
+// golang package sorce
+option go_package = "app/protobufs/orders";
+
+import "google/protobuf/timestamp.proto";
+import  "protobufs/common/common.proto";
+import  "protobufs/foods/foods.proto";
+
+service OrderService {
+  rpc GetMyOrder (GetAllRequest) returns (GetAllResponse) {};  
+}
+
+message GetAllRequest {
+  common.Query query = 1;
+}
+
+message GetAllResponse {
+  common.PageInfo page_info = 1;
+  repeated Order entities = 2;
+}
+
+message Order {
+  string id = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp updated_at = 3;
+  repeated OrderItem items = 4;
+  double total = 5;
+  string user_id = 6;
+}
+
+message OrderItem {
+  int64 quantity = 1;
+  string product_id = 2;
+  foods.Food product = 3;
+}
+

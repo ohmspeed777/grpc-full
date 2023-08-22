@@ -2,11 +2,13 @@ package protocol
 
 import (
 	"app/grpc/user"
+	_user "app/protobufs/user"
 	"fmt"
 	"net"
-	_user "app/protobufs/user"
+
 	"github.com/ohmspeed777/go-pkg/logx"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func NewGRPC() {
@@ -27,4 +29,13 @@ func NewGRPC() {
 
 	logx.GetLog().Infof("grpc server starting on port: %d", app.Config.APP.GRPCPort)
 	server.Serve(lis)
+}
+
+func newOrderGrpcClient() *grpc.ClientConn {
+	conn, err := grpc.Dial(app.Config.GRPC.Order, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logx.GetLog().Fatalf("did not connect grpc server: %v", err)
+	}
+
+	return conn
 }

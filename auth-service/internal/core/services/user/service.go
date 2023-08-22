@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	pb "app/protobufs/orders"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/jinzhu/copier"
 	"github.com/ohmspeed777/go-pkg/errorx"
@@ -19,17 +21,20 @@ import (
 type Dependencies struct {
 	UserRepository ports.UserRepository
 	Key            string
+	OrderGRPC      pb.OrderServiceClient
 }
 
 type service struct {
 	Key            string
 	UserRepository ports.UserRepository
+	OrderGRPC      pb.OrderServiceClient
 }
 
 func NewService(d Dependencies) ports.UserService {
 	return &service{
 		UserRepository: d.UserRepository,
 		Key:            d.Key,
+		OrderGRPC:      d.OrderGRPC,
 	}
 }
 
@@ -115,4 +120,47 @@ func (s *service) SignIn(ctx context.Context, req domain.SignInReq) (*domain.Sig
 		Token:        accessToken,
 		RefreshToken: refreshToken,
 	}, nil
+}
+
+func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Order, error) {
+	user, err := s.UserRepository.FindOneByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := s.OrderGRPC.GetMyOrder(ctx, &pb.GetAllRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	entity := []*domain.Order{}
+
+	for _, e := range resp.Entities {
+		entity = append(entity, &domain.Order{
+			UpdatedAt: e.UpdatedAt.AsTime(),
+			CreatedAt: e.CreatedAt.AsTime(),
+			User:      &user,
+			Total:     e.Total,
+			ID:        e.Id,
+			Items: func(items []*pb.OrderItem) []*domain.OrderItem {
+				entities := []*domain.OrderItem{}
+				for _, item := range items {
+					entities = append(entities, &domain.OrderItem{
+						Quantity:  uint(item.Quantity),
+						ProductID: item.ProductId,
+						Product: &domain.Product{
+							ID: item.Product.Id,
+							Price: item.Product.Price,
+							Name: item.Product.Name,
+							UpdatedAt: item.Product.UpdatedAt.AsTime(),
+							CreatedAt: item.Product.CreatedAt.AsTime(),
+						},
+					})
+				}
+				return entities
+			}(e.Items),
+		})
+	}
+
+	return entity, nil
 }
