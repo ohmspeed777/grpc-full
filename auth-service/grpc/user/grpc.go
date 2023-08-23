@@ -70,12 +70,12 @@ func (g *GRPC) GetMyOrder(ctx context.Context, req *pb.GetMyOrderReq) (*pb.GetMy
 	accessToken := fields[1]
 	user, err := mapClaims(accessToken, g.Key)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.PermissionDenied, err.Error())
 	}
 
 	entity, err := g.UserService.GetMyOrder(ctx, user.ID)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Unavailable, err.Error())
 	}
 
 	return g.transformer.toPaginateResponse(entity, &common.PageInfo{}), nil

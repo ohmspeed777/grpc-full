@@ -1,10 +1,10 @@
 app:
   api: 1326
   name: "auth-service"
-  grpc: 50001
+  grpc: 50002
   
 grpc:
-  order: "localhost:50002"
+  order: "localhost:50001"
 
 mongo:
   username: "root"

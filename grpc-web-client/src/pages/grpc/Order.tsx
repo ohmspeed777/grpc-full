@@ -15,9 +15,11 @@ const OrderGRPC = () => {
   const callGRPC = async () => {
     const req = new GetMyOrderReq();
 
+    const metaData = {"authorization": `Bearer ${localStorage.getItem("token")}`}
+
     // remain metadata
     try {
-      const resp = await instants.userGRPC.getMyOrder(req, null);
+      const resp = await instants.userGRPC.getMyOrder(req, metaData);
       const orders = resp.getEntitiesList();
 
       const entities: IOrder[] = orders.map((order) => {

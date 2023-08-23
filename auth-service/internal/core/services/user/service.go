@@ -4,6 +4,8 @@ import (
 	"app/internal/core/domain"
 	"app/internal/core/ports"
 	"context"
+	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -16,6 +18,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/grpc/metadata"
 )
 
 type Dependencies struct {
@@ -128,8 +131,18 @@ func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Orde
 		return nil, err
 	}
 
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, errors.New("invalid context")
+	}
+
+	fmt.Println(md)
+
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
 	resp, err := s.OrderGRPC.GetMyOrder(ctx, &pb.GetAllRequest{})
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
@@ -149,9 +162,9 @@ func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Orde
 						Quantity:  uint(item.Quantity),
 						ProductID: item.ProductId,
 						Product: &domain.Product{
-							ID: item.Product.Id,
-							Price: item.Product.Price,
-							Name: item.Product.Name,
+							ID:        item.Product.Id,
+							Price:     item.Product.Price,
+							Name:      item.Product.Name,
 							UpdatedAt: item.Product.UpdatedAt.AsTime(),
 							CreatedAt: item.Product.CreatedAt.AsTime(),
 						},

@@ -22,6 +22,7 @@ func NewGRPC() {
 	// create groups
 	userGroup := user.NewGRPC(user.Dependencies{
 		UserService: app.Service.UserService,
+		Key: &app.key.PublicKey,
 	})
 
 	// regis service

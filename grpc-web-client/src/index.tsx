@@ -7,6 +7,7 @@ import FoodJson from "./pages/json/FoodJson";
 import FoodGRPC from "./pages/grpc/FoodGRPC";
 import SignInGRPC from "./pages/grpc/SignInGRPC";
 import FoodStreamGRPC from "./pages/grpc/FoodStreamGRPC";
+import OrderGRPC from "./pages/grpc/Order";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: "grpc/sign-in",
         element: <SignInGRPC />,
+      },
+      {
+        path: "/grpc/auth/orders",
+        element: <OrderGRPC />,
       },
     ],
   },

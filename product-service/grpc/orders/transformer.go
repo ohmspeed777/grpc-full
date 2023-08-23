@@ -12,10 +12,16 @@ import (
 type transformer struct{}
 
 func (t *transformer) toQueryRequest(req *pb.GetAllRequest) domain.Query {
-	return domain.Query{
-		Limit: uint(req.Query.Limit),
-		Page:  uint(req.Query.Page),
+	e := domain.Query{
+		Limit: 20,
+		Page:  1,
 	}
+	if req.Query != nil {
+		e.Limit = uint(req.Query.Limit)
+		e.Page = uint(req.Query.Page)
+	}
+
+	return e
 }
 
 func (t *transformer) toResponse(p domain.Order) *pb.Order {

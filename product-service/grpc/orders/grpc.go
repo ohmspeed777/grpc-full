@@ -41,7 +41,7 @@ const (
 	authorizationHeader = "authorization"
 )
 
-func (g *GRPC) GetAll(ctx context.Context, req *pb.GetAllRequest) (*pb.GetAllResponse, error) {
+func (g *GRPC) GetMyOrder(ctx context.Context, req *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	e := g.transformer.toQueryRequest(req)
 
 	md, ok := metadata.FromIncomingContext(ctx)
