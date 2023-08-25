@@ -6,6 +6,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/ohmspeed777/go-pkg/errorx"
+	"github.com/ohmspeed777/go-pkg/logx"
 )
 
 type Dependencies struct {
@@ -32,6 +33,7 @@ func (h *Handler) SignUp(c echo.Context) error {
 
 	err := h.UserService.SignUp(c.Request().Context(), h.transformer.toSingUpEntity(req))
 	if err != nil {
+		logx.GetLog().Error(err)
 		return err
 	}
 
@@ -46,6 +48,7 @@ func (h *Handler) SignIn(c echo.Context) error {
 
 	res, err := h.UserService.SignIn(c.Request().Context(), h.transformer.toSingInEntity(req))
 	if err != nil {
+		logx.GetLog().Error(err)
 		return err
 	}
 

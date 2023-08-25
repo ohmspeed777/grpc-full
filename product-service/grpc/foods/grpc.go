@@ -33,6 +33,7 @@ func NewGRPC(d Dependencies) *GRPC {
 func (g *GRPC) GetAll(ctx context.Context, req *pb.GetAllRequest) (*pb.GetAllResponse, error) {
 	entity, err := g.ProductService.FindAll(ctx, g.transformer.toQueryRequest(req))
 	if err != nil {
+		logx.GetLog().Error(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -49,6 +50,7 @@ func (g *GRPC) GetAll(ctx context.Context, req *pb.GetAllRequest) (*pb.GetAllRes
 func (g *GRPC) GetAllStream(req *common.Empty, srv pb.FoodsService_GetAllStreamServer) error {
 	entity, err := g.ProductService.FindAll(srv.Context(), domain.Query{})
 	if err != nil {
+		logx.GetLog().Error(err)
 		return status.Error(codes.Internal, err.Error())
 	}
 
@@ -56,6 +58,7 @@ func (g *GRPC) GetAllStream(req *common.Empty, srv pb.FoodsService_GetAllStreamS
 		time.Sleep(1 * time.Second)
 		err := srv.Send(g.transformer.toResponse(v))
 		if err != nil {
+			logx.GetLog().Error(err)
 			return status.Error(codes.Internal, err.Error())
 		}
 	}

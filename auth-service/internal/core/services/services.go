@@ -4,6 +4,7 @@ import (
 	"app/configs"
 	"app/internal/core/ports"
 	"app/internal/core/services/user"
+	"app/protobufs/foods"
 	orders "app/protobufs/orders"
 	"app/repository/mongodb"
 
@@ -26,6 +27,7 @@ func NewService(d Dependencies) *Service {
 			UserRepository: d.Repository.UserRepository,
 			Key:            d.Conf.JWT.PRIV,
 			OrderGRPC:      orders.NewOrderServiceClient(d.CC),
+			FoodGRPC:       foods.NewFoodsServiceClient(d.CC),
 		}),
 	}
 }

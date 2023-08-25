@@ -7,6 +7,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/ohmspeed777/go-pkg/jwtx"
+	"github.com/ohmspeed777/go-pkg/logx"
 	"github.com/pkg/errors"
 )
 
@@ -44,6 +45,7 @@ func (h *Handler) GetAll(ctx echo.Context) error {
 
 	entity, err := h.OrderService.FindAll(ctx.Request().Context(), e)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return err
 	}
 
@@ -68,6 +70,7 @@ func (h *Handler) Create(ctx echo.Context) error {
 
 	_, err := h.OrderService.Create(ctx.Request().Context(), h.transformer.toRequest(req))
 	if err != nil {
+		logx.GetLog().Error(err)
 		return err
 	}
 

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"time"
 
+	food_pb "app/protobufs/foods"
 	pb "app/protobufs/orders"
 
 	"github.com/golang-jwt/jwt"
@@ -25,12 +26,14 @@ type Dependencies struct {
 	UserRepository ports.UserRepository
 	Key            string
 	OrderGRPC      pb.OrderServiceClient
+	FoodGRPC       food_pb.FoodsServiceClient
 }
 
 type service struct {
 	Key            string
 	UserRepository ports.UserRepository
 	OrderGRPC      pb.OrderServiceClient
+	FoodGRPC       food_pb.FoodsServiceClient
 }
 
 func NewService(d Dependencies) ports.UserService {
@@ -38,6 +41,7 @@ func NewService(d Dependencies) ports.UserService {
 		UserRepository: d.UserRepository,
 		Key:            d.Key,
 		OrderGRPC:      d.OrderGRPC,
+		FoodGRPC:       d.FoodGRPC,
 	}
 }
 
@@ -49,21 +53,25 @@ func (s *service) SignUp(ctx context.Context, req domain.SignUpReq) error {
 
 	old, err := s.UserRepository.FindOneByEmail(ctx, req.Email)
 	if err != nil && err != mongo.ErrNoDocuments {
+		logx.GetLog().Error(err)
 		return errorx.New(http.StatusBadRequest, "can not create user", err)
 	}
 
 	if old.Email == req.Email {
+		logx.GetLog().Error(err)
 		return errorx.New(http.StatusBadRequest, "this email have already used", err)
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), 12)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return errorx.New(http.StatusBadRequest, "can not encrypt password", err)
 	}
 
 	entity.Password = string(hash)
 	_, err = s.UserRepository.Create(ctx, entity)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return errorx.New(http.StatusBadRequest, "can not create user", err)
 	}
 
@@ -73,10 +81,12 @@ func (s *service) SignUp(ctx context.Context, req domain.SignUpReq) error {
 func (s *service) SignIn(ctx context.Context, req domain.SignInReq) (*domain.SignInRes, error) {
 	user, err := s.UserRepository.FindOneByEmail(ctx, req.Email)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return nil, errorx.New(http.StatusBadRequest, "invalid email or password", err)
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		logx.GetLog().Error(err)
 		return nil, errorx.New(http.StatusBadRequest, "invalid email or password", err)
 	}
 
@@ -101,6 +111,7 @@ func (s *service) SignIn(ctx context.Context, req domain.SignInReq) (*domain.Sig
 
 	accessToken, err := token.SignedString(key)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return nil, errorx.New(http.StatusBadRequest, "can not generate access token", err)
 	}
 
@@ -116,6 +127,7 @@ func (s *service) SignIn(ctx context.Context, req domain.SignInReq) (*domain.Sig
 
 	refreshToken, err := rtToken.SignedString(key)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return nil, errorx.New(http.StatusBadRequest, "can not generate refresh token", err)
 	}
 
@@ -128,6 +140,7 @@ func (s *service) SignIn(ctx context.Context, req domain.SignInReq) (*domain.Sig
 func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Order, error) {
 	user, err := s.UserRepository.FindOneByID(ctx, userID)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return nil, err
 	}
 
@@ -142,7 +155,7 @@ func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Orde
 
 	resp, err := s.OrderGRPC.GetMyOrder(ctx, &pb.GetAllRequest{})
 	if err != nil {
-		fmt.Println(err)
+		logx.GetLog().Error(err)
 		return nil, err
 	}
 
@@ -176,4 +189,28 @@ func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Orde
 	}
 
 	return entity, nil
+}
+
+func (s *service) ClientStream(ctx context.Context, userID string) error {
+	steam, err := s.FoodGRPC.SendStream(ctx)
+	if err != nil {
+		logx.GetLog().Error(err)
+		return err
+	}
+
+	// steam.Send()
+	resp, err := steam.CloseAndRecv()
+	if err != nil {
+		logx.GetLog().Error(err)
+		return err
+	}
+
+	fmt.Println(resp)
+
+	return nil
+}
+
+func (s *service) BidirectionalStream(ctx context.Context, userID string) error {
+
+	return nil
 }

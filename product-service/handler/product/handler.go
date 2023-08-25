@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"github.com/ohmspeed777/go-pkg/logx"
 	"github.com/pkg/errors"
 )
 
@@ -37,14 +38,13 @@ func (h *Handler) GetAll(ctx echo.Context) error {
 
 	entity, err := h.ProductService.FindAll(ctx.Request().Context(), h.transformer.toQueryRequest(req))
 	if err != nil {
+		logx.GetLog().Error(err)
 		return err
 	}
 
 	resp := h.transformer.toPaginateResponse(entity.Entities, common.PageInfo(entity.PageInfo))
 	return ctx.JSON(http.StatusOK, resp)
 }
-
-
 
 func (h *Handler) Create(ctx echo.Context) error {
 	var (
@@ -58,6 +58,7 @@ func (h *Handler) Create(ctx echo.Context) error {
 
 	entity, err := h.ProductService.Create(ctx.Request().Context(), h.transformer.toRequest(req))
 	if err != nil {
+		logx.GetLog().Error(err)
 		return err
 	}
 

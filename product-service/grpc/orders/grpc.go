@@ -12,6 +12,7 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/ohmspeed777/go-pkg/jwtx"
+	"github.com/ohmspeed777/go-pkg/logx"
 	codes "google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	status "google.golang.org/grpc/status"
@@ -70,6 +71,7 @@ func (g *GRPC) GetMyOrder(ctx context.Context, req *pb.GetAllRequest) (*pb.GetAl
 
 	entity, err := g.OrderService.FindAll(ctx, e)
 	if err != nil {
+		logx.GetLog().Error(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
