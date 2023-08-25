@@ -6,6 +6,8 @@ import (
 	"app/protobufs/common"
 	pb "app/protobufs/foods"
 	context "context"
+	"fmt"
+	"io"
 	"time"
 
 	"github.com/ohmspeed777/go-pkg/logx"
@@ -71,10 +73,9 @@ func (g *GRPC) SendStream(srv pb.FoodsService_SendStreamServer) error {
 	resp := &pb.GetAllResponse{}
 
 	for {
-		select {
-		// Exit on stream context done
-		case <-srv.Context().Done():
-			// Send the Hardware stats on the stream
+		food, err := srv.Recv()
+
+		if err == io.EOF {
 			resp.Entities = foods
 			err := srv.SendAndClose(resp)
 			if err != nil {
@@ -82,16 +83,14 @@ func (g *GRPC) SendStream(srv pb.FoodsService_SendStreamServer) error {
 				return err
 			}
 			return nil
-		default:
-			// Grab stats and output
-			food, err := srv.Recv()
-			if err != nil {
-				logx.GetLog().Println(err.Error())
-				return err
-			}
-
-			foods = append(foods, food)
 		}
-	}
 
+		if err != nil {
+			logx.GetLog().Println(err.Error())
+			return err
+		}
+
+		fmt.Println("food: ", food)
+		foods = append(foods, food)
+	}
 }

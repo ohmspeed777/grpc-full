@@ -12,5 +12,6 @@ type ProductService interface {
 type UserService interface {
 	SignIn(ctx context.Context, req domain.SignInReq) (*domain.SignInRes, error)
 	SignUp(ctx context.Context, req domain.SignUpReq) error
-	GetMyOrder(ctx context.Context, userID string) ([]*domain.Order, error) 
+	GetMyOrder(ctx context.Context, userID string) ([]*domain.Order, error)
+	ClientStream(ctx context.Context) error
 }

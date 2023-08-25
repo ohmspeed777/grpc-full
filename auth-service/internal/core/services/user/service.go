@@ -20,6 +20,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Dependencies struct {
@@ -191,15 +192,40 @@ func (s *service) GetMyOrder(ctx context.Context, userID string) ([]*domain.Orde
 	return entity, nil
 }
 
-func (s *service) ClientStream(ctx context.Context, userID string) error {
-	steam, err := s.FoodGRPC.SendStream(ctx)
+func (s *service) ClientStream(ctx context.Context) error {
+	stream, err := s.FoodGRPC.SendStream(ctx)
 	if err != nil {
 		logx.GetLog().Error(err)
 		return err
 	}
 
-	// steam.Send()
-	resp, err := steam.CloseAndRecv()
+	foods := []*food_pb.Food{
+		{
+			Id:        "1",
+			Name:      "น้ำตก",
+			Price:     200,
+			CreatedAt: timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+		},
+		{
+			Id:        "2",
+			Name:      "กล้วย",
+			Price:     5000000000,
+			CreatedAt: timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+		},
+	}
+
+	for _, v := range foods {
+		time.Sleep(1 * time.Second)
+		err := stream.Send(v)
+		if err != nil {
+			logx.GetLog().Error(err)
+			return err
+		}
+	}
+
+	resp, err := stream.CloseAndRecv()
 	if err != nil {
 		logx.GetLog().Error(err)
 		return err

@@ -36,6 +36,11 @@ func NewAPI() {
 		users.POST("/sign-in", hdl.User.SignIn)
 	}
 
+	stream := baseAPI.Group("/stream")
+	{
+		stream.GET("/client", hdl.User.ClientStream)
+	}
+
 	logx.GetLog().Infof("server starting on port: %d", app.Config.APP.APIPort)
 	e.Server.Addr = fmt.Sprintf(":%d", app.Config.APP.APIPort)
 	_ = graceful.ListenAndServe(e.Server, 5*time.Second)

@@ -54,3 +54,18 @@ func (h *Handler) SignIn(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, h.transformer.toSingInJSON(*res))
 }
+
+func (h *Handler) ClientStream(c echo.Context) error {
+	req := SignInReq{}
+	if err := c.Bind(&req); err != nil {
+		return errorx.NewInvalidRequest(err)
+	}
+
+	err := h.UserService.ClientStream(c.Request().Context())
+	if err != nil {
+		logx.GetLog().Error(err)
+		return err
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
