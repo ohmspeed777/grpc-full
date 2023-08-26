@@ -236,7 +236,55 @@ func (s *service) ClientStream(ctx context.Context) error {
 	return nil
 }
 
-func (s *service) BidirectionalStream(ctx context.Context, userID string) error {
+func (s *service) BidirectionalStream(ctx context.Context) error {
+	stream, err := s.FoodGRPC.BiDirectionalStream(ctx)
+	if err != nil {
+		logx.GetLog().Error(err)
+		return err
+	}
 
+	foods := []*food_pb.Food{
+		{
+			Id:        "1",
+			Name:      "น้ำตก",
+			Price:     200,
+			CreatedAt: timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+		},
+		{
+			Id:        "2",
+			Name:      "กล้วย",
+			Price:     5000000000,
+			CreatedAt: timestamppb.Now(),
+			UpdatedAt: timestamppb.Now(),
+		},
+	}
+
+	go func() {
+		for {
+			resp, err := stream.Recv()
+			if err != nil {
+				logx.GetLog().Error(err)
+				return
+			}
+
+			fmt.Println("resp ", resp)
+		}
+	}()
+
+	for _, v := range foods {
+		time.Sleep(1 * time.Second)
+		err := stream.Send(v)
+		if err != nil {
+			logx.GetLog().Error(err)
+			return err
+		}
+	}
+
+	err = stream.CloseSend()
+	if err != nil {
+		logx.GetLog().Error(err)
+		return err
+	}
 	return nil
 }

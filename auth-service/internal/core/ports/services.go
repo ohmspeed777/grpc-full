@@ -14,4 +14,5 @@ type UserService interface {
 	SignUp(ctx context.Context, req domain.SignUpReq) error
 	GetMyOrder(ctx context.Context, userID string) ([]*domain.Order, error)
 	ClientStream(ctx context.Context) error
+	BidirectionalStream(ctx context.Context) error
 }

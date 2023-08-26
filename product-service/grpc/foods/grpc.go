@@ -68,6 +68,25 @@ func (g *GRPC) GetAllStream(req *common.Empty, srv pb.FoodsService_GetAllStreamS
 	return nil
 }
 
+func (g *GRPC) BiDirectionalStream(srv pb.FoodsService_BiDirectionalStreamServer) error {
+	for {
+		food, err := srv.Recv()
+
+		if err == io.EOF {
+			return nil
+		}
+
+		if err != nil {
+			logx.GetLog().Println(err.Error())
+			return err
+		}
+
+		fmt.Println("food: ", food)
+
+		srv.Send(food)
+	}
+}
+
 func (g *GRPC) SendStream(srv pb.FoodsService_SendStreamServer) error {
 	foods := []*pb.Food{}
 	resp := &pb.GetAllResponse{}

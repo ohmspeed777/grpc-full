@@ -56,12 +56,18 @@ func (h *Handler) SignIn(c echo.Context) error {
 }
 
 func (h *Handler) ClientStream(c echo.Context) error {
-	req := SignInReq{}
-	if err := c.Bind(&req); err != nil {
-		return errorx.NewInvalidRequest(err)
+	err := h.UserService.ClientStream(c.Request().Context())
+	if err != nil {
+		logx.GetLog().Error(err)
+		return err
 	}
 
-	err := h.UserService.ClientStream(c.Request().Context())
+	return c.JSON(http.StatusOK, nil)
+}
+
+
+func (h *Handler) BidirectionalStream(c echo.Context) error {
+	err := h.UserService.BidirectionalStream(c.Request().Context())
 	if err != nil {
 		logx.GetLog().Error(err)
 		return err

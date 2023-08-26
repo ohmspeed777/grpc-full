@@ -39,6 +39,7 @@ func NewAPI() {
 	stream := baseAPI.Group("/stream")
 	{
 		stream.GET("/client", hdl.User.ClientStream)
+		stream.GET("/bi", hdl.User.BidirectionalStream)
 	}
 
 	logx.GetLog().Infof("server starting on port: %d", app.Config.APP.APIPort)

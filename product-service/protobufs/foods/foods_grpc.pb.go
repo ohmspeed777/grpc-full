@@ -26,6 +26,7 @@ type FoodsServiceClient interface {
 	GetAll(ctx context.Context, in *GetAllRequest, opts ...grpc.CallOption) (*GetAllResponse, error)
 	GetAllStream(ctx context.Context, in *common.Empty, opts ...grpc.CallOption) (FoodsService_GetAllStreamClient, error)
 	SendStream(ctx context.Context, opts ...grpc.CallOption) (FoodsService_SendStreamClient, error)
+	BiDirectionalStream(ctx context.Context, opts ...grpc.CallOption) (FoodsService_BiDirectionalStreamClient, error)
 }
 
 type foodsServiceClient struct {
@@ -111,6 +112,37 @@ func (x *foodsServiceSendStreamClient) CloseAndRecv() (*GetAllResponse, error) {
 	return m, nil
 }
 
+func (c *foodsServiceClient) BiDirectionalStream(ctx context.Context, opts ...grpc.CallOption) (FoodsService_BiDirectionalStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &FoodsService_ServiceDesc.Streams[2], "/foods.FoodsService/BiDirectionalStream", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &foodsServiceBiDirectionalStreamClient{stream}
+	return x, nil
+}
+
+type FoodsService_BiDirectionalStreamClient interface {
+	Send(*Food) error
+	Recv() (*Food, error)
+	grpc.ClientStream
+}
+
+type foodsServiceBiDirectionalStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *foodsServiceBiDirectionalStreamClient) Send(m *Food) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *foodsServiceBiDirectionalStreamClient) Recv() (*Food, error) {
+	m := new(Food)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // FoodsServiceServer is the server API for FoodsService service.
 // All implementations must embed UnimplementedFoodsServiceServer
 // for forward compatibility
@@ -118,6 +150,7 @@ type FoodsServiceServer interface {
 	GetAll(context.Context, *GetAllRequest) (*GetAllResponse, error)
 	GetAllStream(*common.Empty, FoodsService_GetAllStreamServer) error
 	SendStream(FoodsService_SendStreamServer) error
+	BiDirectionalStream(FoodsService_BiDirectionalStreamServer) error
 	mustEmbedUnimplementedFoodsServiceServer()
 }
 
@@ -133,6 +166,9 @@ func (UnimplementedFoodsServiceServer) GetAllStream(*common.Empty, FoodsService_
 }
 func (UnimplementedFoodsServiceServer) SendStream(FoodsService_SendStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method SendStream not implemented")
+}
+func (UnimplementedFoodsServiceServer) BiDirectionalStream(FoodsService_BiDirectionalStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method BiDirectionalStream not implemented")
 }
 func (UnimplementedFoodsServiceServer) mustEmbedUnimplementedFoodsServiceServer() {}
 
@@ -212,6 +248,32 @@ func (x *foodsServiceSendStreamServer) Recv() (*Food, error) {
 	return m, nil
 }
 
+func _FoodsService_BiDirectionalStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(FoodsServiceServer).BiDirectionalStream(&foodsServiceBiDirectionalStreamServer{stream})
+}
+
+type FoodsService_BiDirectionalStreamServer interface {
+	Send(*Food) error
+	Recv() (*Food, error)
+	grpc.ServerStream
+}
+
+type foodsServiceBiDirectionalStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *foodsServiceBiDirectionalStreamServer) Send(m *Food) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *foodsServiceBiDirectionalStreamServer) Recv() (*Food, error) {
+	m := new(Food)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // FoodsService_ServiceDesc is the grpc.ServiceDesc for FoodsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -233,6 +295,12 @@ var FoodsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "SendStream",
 			Handler:       _FoodsService_SendStream_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "BiDirectionalStream",
+			Handler:       _FoodsService_BiDirectionalStream_Handler,
+			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},
