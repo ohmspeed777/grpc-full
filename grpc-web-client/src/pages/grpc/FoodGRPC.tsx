@@ -1,4 +1,4 @@
-import Card from "../../components/card";
+import Card from "../../components/Card";
 import React, { useEffect, useState } from "react";
 import instants from "../../instants/instants";
 import { GetAllRequest } from "../../protos/foods_pb";

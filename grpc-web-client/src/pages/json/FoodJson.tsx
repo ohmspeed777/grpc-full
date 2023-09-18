@@ -1,4 +1,4 @@
-import Card from "../../components/card";
+import Card from "../../components/Card";
 import configs from "../../configs/configs";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -22,7 +22,7 @@ const FoodsJson = () => {
       const resp = await axios.get(`${configs.HOST_API}/api/v1/foods`);
       return resp.data?.entities ?? [];
     } catch (e) {
-      throw e
+      throw e;
     }
   };
 

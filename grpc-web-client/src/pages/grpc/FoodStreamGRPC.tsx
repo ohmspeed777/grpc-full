@@ -1,4 +1,4 @@
-import Card from "../../components/card";
+import Card from "../../components/Card";
 import React, { useState } from "react";
 import instants from "../../instants/instants";
 import { Empty } from "../../protos/common_pb";
