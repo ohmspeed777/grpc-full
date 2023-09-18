@@ -1,0 +1,65 @@
+[{
+  "_id": {
+    "$oid": "64bd42604112aa4fa79661fa"
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1685552400000"
+    }
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1685552400000"
+    }
+  },
+  "name": "ส้มตำ",
+  "price": 35
+},{
+  "_id": {
+    "$oid": "000000000000000000000000"
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1690348796594"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1690348796594"
+    }
+  },
+  "name": "ลาบ",
+  "price": 40
+},{
+  "_id": {
+    "$oid": "64c0ade966b32298c4dd9b8b"
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1690349033086"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1690349033086"
+    }
+  },
+  "name": "น้ำตก",
+  "price": 40
+},{
+  "_id": {
+    "$oid": "64c0adf966b32298c4dd9b8c"
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1690349049437"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1690349049437"
+    }
+  },
+  "name": "ก้อยกุ้ง",
+  "price": 45
+}]

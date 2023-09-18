@@ -1,0 +1,262 @@
+{
+	"info": {
+		"_postman_id": "aef64001-1909-43c6-bedf-a796877d9f9d",
+		"name": "grpc-full-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9964450"
+	},
+	"item": [
+		{
+			"name": "foods",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{http_store}}/api/v1/foods",
+							"host": [
+								"{{http_store}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"foods"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"ก้อยกุ้ง\",\n    \"price\": 45\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{http_store}}/api/v1/foods",
+							"host": [
+								"{{http_store}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"foods"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "sign up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"first_name\": \"first_test\",\n    \"last_name\": \"last_test\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{http_auth}}/api/v1/users/sign-up",
+							"host": [
+								"{{http_auth}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"sign-up"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign in",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@test.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{http_auth}}/api/v1/users/sign-in",
+							"host": [
+								"{{http_auth}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"sign-in"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "get all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{http_store}}/api/v1/orders",
+							"host": [
+								"{{http_store}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTIwOTkyNjUsImlhdCI6MTY5MjA5NzQ2NSwiaWQiOiI2NGM4ZjNiM2Y4ZWJlZTkyNGRhNjdjNzUiLCJpc3MiOiJhcHAiLCJqdGkiOiIxNzlmZmNiNi1lYzZmLTQ0ZGUtOTIzYi0yYTFmZWMxNzE1OGIiLCJyb2xlIjoxLCJzdWIiOiJhY2Nlc3NfdG9rZW4ifQ.MDM1AzsiSxx_fd2by_DpNQ75YhYXsoH6TYqY-tfoZD0nhH3zL3k9-5GyI50T3AuTeUXey25xpgkKfxiCNhcA1ZpKyPgY43DQMrTJLDj6K1Flbf_5sBRhc3CVkpl9IB2GV2Ml9Fj-_UNsCjpAGl0wp7fnnYSgsSJ_XNwd4cCCPLtH_pzgbDG92RXJ6gWMwAn-7UHmctV6b3oGJdGr9-fg3QPh30-O2-IR_MtLGBxEXp6GazhrNSObiFihTV93RWQiZjgIv1jN58CTbeswrpTK2mVBA4KGuRsGk9U0i1soMsX7cx-w0WpQ3WGNN5tiwHfJ6Jc8RemqZEboHUrFGOZaNQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"items\": [\n        {\n            \"quantity\": 3,\n            \"product_id\": \"64bd42604112aa4fa79661fa\"\n        }\n    ],\n    \"total\": 190\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{http_store}}/api/v1/orders",
+							"host": [
+								"{{http_store}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "stream",
+			"item": [
+				{
+					"name": "client stream",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{http_auth}}/api/v1/stream/client",
+							"host": [
+								"{{http_auth}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"stream",
+								"client"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bi stream",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{http_auth}}/api/v1/stream/bi",
+							"host": [
+								"{{http_auth}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"stream",
+								"bi"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2OTIwOTk3NjcsImlhdCI6MTY5MjA5Nzk2NywiaWQiOiI2NGM4ZjNiM2Y4ZWJlZTkyNGRhNjdjNzUiLCJpc3MiOiJhcHAiLCJqdGkiOiI5NTQxMjMzMC05MmMwLTRmZDUtOGFiNC0xM2NiMGEwOGE1OTIiLCJyb2xlIjoxLCJzdWIiOiJhY2Nlc3NfdG9rZW4ifQ.Fa7UZwtCy9DE1JTRrvkzNFqmxDft6TaHRzneX-2yJj7ltF7rz2UUUg_aivWzbFHR7HTdqhEinxK-oa2Y4PUX59V9ItXHdouPQ74-u5Kwza6Yw-QYAi4Ex6cwZtcbElEfm8Z7Rzfjv8vFySVMVNwq5EAEWgOFH_aCYmeLLM005dg43JUNobGb_wXquNh8fs-T0MHkAuj-gNbt6NEHQbMc-O13s0zQGZYc3N3KfpcWdTgaBJk0giaLsSgoWGZsfHLZXUTPc97cuyT5OgqnWurWXg1at9Dw4isSSAQgDjFyjrcZcf4kgTgXNwxF2L3n0wleum5l-X8k3K8M-B5h0DIY2g",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

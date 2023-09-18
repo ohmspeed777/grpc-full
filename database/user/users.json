@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "64c8f3b3f8ebee924da67c75"
+  },
+  "updated_at": {
+    "$date": {
+      "$numberLong": "1690891186797"
+    }
+  },
+  "created_at": {
+    "$date": {
+      "$numberLong": "1690891186797"
+    }
+  },
+  "email": "test@test.com",
+  "password": "$2a$12$4vojdEdmeDb0DRCGCDwN8.L35cwfENHTrzv8qC.hfP6wgxz8oSFWG",
+  "first_name": "first_test",
+  "last_name": "last_test"
+}]
